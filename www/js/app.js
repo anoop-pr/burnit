@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
-
-.run(function($ionicPlatform) {
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic.apis', 'ngCordova', 'ngMaterial', 'ionic.utils', 'ngRadialGauge'])
+.constant('$api', {url :'/api'}) // /api || http://54.214.240.60:8080/BURN_IT
+.run(function($ionicPlatform, $ionicPopup, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,11 +17,33 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    if(window.Connection) {
+        if(navigator.connection.type == Connection.NONE) {
+            $ionicPopup.confirm({
+                title: "Internet Disconnected",
+                content: "The internet is disconnected on your device."
+            })
+            .then(function(result) {
+                if(!result) {
+                    ionic.Platform.exitApp();
+                }
+            });
+        }
+    }
   });
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
+
   $stateProvider
+
+  .state('profile', {
+    url: "/profile",
+    templateUrl: "templates/default-profile.html",
+    controller: 'ProfileCtrl'
+  })
+
 
   .state('app', {
     url: "/app",
@@ -30,42 +52,73 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     controller: 'AppCtrl'
   })
 
-  .state('app.search', {
-    url: "/search",
+  .state('app.home', {
+    url: "/home",
+    cache: false,
     views: {
       'menuContent': {
-        templateUrl: "templates/search.html"
+        templateUrl: "templates/home.html",
+        controller: 'HomeCtrl'
       }
     }
   })
 
-  .state('app.browse', {
-    url: "/browse",
+  .state('app.food', {
+    url: "/food",
     views: {
       'menuContent': {
-        templateUrl: "templates/browse.html"
+        templateUrl: "templates/food.html",
+       controller: 'FoodCtrl'
       }
     }
   })
-    .state('app.playlists', {
-      url: "/playlists",
-      views: {
-        'menuContent': {
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
 
-  .state('app.single', {
-    url: "/playlists/:playlistId",
+  .state('app.activities', {
+    url: "/activities",
     views: {
       'menuContent': {
-        templateUrl: "templates/playlist.html",
-        controller: 'PlaylistCtrl'
+        templateUrl: "templates/activities.html",
+       controller: 'ActivityCtrl'
+      }
+    }
+  })
+
+
+  .state('app.fooddetails', {
+    url: "/food/:id",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/food-details.html",
+       controller: 'FoodDetailsCtrl'
+      }
+    }
+  })
+
+  .state('app.newfood', {
+    url: "/newfood",
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: "templates/newfood.html",
+        controller: 'AddFoodCtrl'
+      }
+    }
+  })
+
+  .state('app.profile', {
+    url: "/profile",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/profile.html",
+        controller: 'ProfileCtrl'
       }
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  var session = JSON.parse(window.localStorage['data'] || '{}')
+  if($.isEmptyObject(session)) {
+    $urlRouterProvider.otherwise('/profile');  
+  } else {
+    $urlRouterProvider.otherwise('/app/home');
+  }  
 });

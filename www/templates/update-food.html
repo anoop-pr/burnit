@@ -1,0 +1,29 @@
+<ion-modal-view>
+  <ion-header-bar align-title="left" class="bar-positive">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeAdd()">
+      	<i class="ion-android-arrow-back"></i>
+      </button>
+      
+    <h1 class="title">Update Food Details</h1>
+    <button class="button button-icon button-clear navbar-icons" ng-click="update(food)">
+			<i class="ion-checkmark"></i>
+		</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+
+  <div class="row">
+  		<div class="col">
+  		<md-content layout-padding>
+	  		<form autocomplete="off" id="foodDiary" name="foodDiary" novalidate>
+				<md-input-container >
+					<label>Food Diary</label>
+					<textarea ng-model="food.foodText" columns="1" md-maxlength="500" autofocus></textarea>
+				</md-input-container>
+			</form>
+			</md-content>
+  		</div>
+  	</div>
+  </ion-content>
+</ion-modal-view>

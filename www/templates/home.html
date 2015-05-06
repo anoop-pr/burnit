@@ -1,0 +1,34 @@
+<ion-view view-title="Dashboard">
+  <ion-content>
+	<div class="row dash-container">
+	  <div class="col col-50">
+		<div class="card">
+			<div class="item item-divider">
+				<h4>BMI</h4>
+			</div>
+			<div class="item item-text-wrap">
+				<p class="number">{{data.bmi | number:1}}</p>
+			</div>
+		</div>
+	  </div>
+	  <div class="col col-50">
+	  	<div class="card">
+			<div class="item item-divider">
+				<h4>BMR (cal/day)</h4>
+			</div>
+			<div class="item item-text-wrap">
+				<p class="number">{{data.bmr | number: 0}}</p>
+			</div>
+		</div>
+	  </div>
+	</div>
+	<div class="row dash-container">
+		<div class="col">
+			<div width="300" ng-radial-gauge ranges="ranges" value="data.bmi" value-unit="unit" 
+			     precision="precision" lower-limit="lowerLimit" upper-limit="upperLimit">
+			</div>
+			<p>{{data.category | uppercase}}</p>
+		</div>
+	</div>
+  </ion-content>
+</ion-view>

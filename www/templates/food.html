@@ -1,0 +1,17 @@
+<ion-view view-title="Food Diary">
+  <ion-content>
+	<ion-list can-swipe="true">
+	  <ion-item ng-repeat="item in food" href="#/app/food/{{$index}}">
+	  	<div class="circle">{{item.date | date:'dd'}}</div>
+		<h2 class="list-title">{{item.date | date:'longDate'}}</h2>
+		<!-- <p>Average calorie intake - <strong>{{item.calorieConsumption}}</strong></p> -->
+	    <ion-option-button class="button-assertive" ng-click="delete(item, $index);">
+	      <i class="icon ion-trash-b swipe-trash"></i>
+	    </ion-option-button>
+	  </ion-item>
+	</ion-list>
+  </ion-content>
+  <md-button class="md-primary md-fab md-fab-bottom-right" href="#/app/newfood">
+    <i class="icon ion-plus"></i>
+  </md-button>
+</ion-view>

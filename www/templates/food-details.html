@@ -1,0 +1,23 @@
+<ion-view view-title="Food Details">
+  <ion-content>
+  	<div class="card tasks" ng-repeat="item in data">
+	  	<div class="item item-text-wrap">
+	  	<!-- <h2 class="card-title">{{item.time | date:'shortTime'}}</h2> -->
+	    <p>{{item.foodText}}</p>
+	    <p>Calorie Consumption: <strong>{{item.calorieConsumption}}</strong> cal</p>
+	  	</div>
+	  	 <div class="washed-out-10 tasks-footer">
+          	<div class="item tabs tabs-secondary tabs-icon-left">
+			    <a class="tab-item" ng-click="remove(item.id, $index)">
+			      	<i class="icon ion-trash-b"></i>
+			      	Remone
+			    </a>
+			    <a class="tab-item" ng-click="edit(item.id, $index)">
+			     	<i class="icon ion-edit"></i>
+			      	Edit
+			    </a>
+			 </div>
+		 </div>
+	</div>
+  </ion-content>
+</ion-view>

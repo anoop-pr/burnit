@@ -1,0 +1,39 @@
+<ion-header-bar class="bar-positive">
+    <h1 class="title">Register</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="update(profile)">
+      	<i class="ion-checkmark"></i>
+      </button>
+    </div>
+  </ion-header-bar>
+<ion-content>
+	<div class="row">
+		<div class="col">
+	  		<form autocomplete="off" id="foodDiary" name="foodDiary" novalidate>
+				<md-input-container >
+					<label>Name</label>
+					<input ng-model="profile.name" required>
+				</md-input-container>
+				<md-input-container >
+					<label>Age</label>
+					<input ng-model="profile.age" type="number"  max="120">
+				</md-input-container>
+				<md-input-container >
+					<label>Height(Centimeters)</label>
+					<input ng-model="profile.height" type="number" max="250">
+				</md-input-container>
+				<md-input-container >
+					<label>Weight(Kilograms)</label>
+					<input ng-model="profile.weight" type="number" max="300">
+				</md-input-container>
+				<div >
+					<label>Gender</label>
+					<md-radio-group ng-model="profile.gender">
+				      <md-radio-button value="M" class="md-primary">Male</md-radio-button>
+				      <md-radio-button value="F" class="md-primary"> Female </md-radio-button>
+				    </md-radio-group>
+				</div>
+			</form>
+		</div>
+	</div>
+</ion-content>

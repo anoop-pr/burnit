@@ -1,0 +1,25 @@
+<ion-view view-title="Create Food Diary">
+  <ion-nav-buttons side="right">
+		<button class="button button-icon button-clear navbar-icons" ng-click="saveFood(food)">
+			<i class="ion-checkmark"></i>
+		</button>
+	</ion-nav-buttons>	
+  <ion-content>
+  	<div class="row">
+  		<div class="col">
+  		<md-content layout-padding>
+	  		<form autocomplete="off" id="foodDiary" name="foodDiary" novalidate>
+	  			<md-input-container flex>
+			      <label>Date</label>
+			      <input  ng-model="food.date" type="date"> <!--  -->
+			    </md-input-container>
+				<md-input-container >
+					<label>Food Diary</label>
+					<textarea ng-model="food.text" columns="1" md-maxlength="500"></textarea>
+				</md-input-container>
+			</form>
+			</md-content>
+  		</div>
+  	</div>
+  </ion-content>
+</ion-view>

@@ -1,4 +1,10 @@
 {
   "name": "burnit",
-  "app_id": ""
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://54.214.240.60:8080/BURN_IT"
+    }
+  ]
 }
