@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'ionic.apis', 'ngCordova', 'ngMaterial', 'ionic.utils', 'ngRadialGauge'])
-.constant('$api', {url :'/api'}) // /api || http://54.214.240.60:8080/BURN_IT
+.constant('$api', {url :'http://54.214.240.60:8080/BURN_IT'}) // /api || http://54.214.240.60:8080/BURN_IT
 .run(function($ionicPlatform, $ionicPopup, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -94,6 +94,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic.apis', 'ngCord
     }
   })
 
+  .state('app.activitydetails', {
+    url: "/activity/:id",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/activity-details.html",
+       controller: 'ActivityDetailsCtrl'
+      }
+    }
+  })
+
   .state('app.newfood', {
     url: "/newfood",
     cache: false,
@@ -101,6 +111,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic.apis', 'ngCord
       'menuContent': {
         templateUrl: "templates/newfood.html",
         controller: 'AddFoodCtrl'
+      }
+    }
+  })
+
+  .state('app.newactivity', {
+    url: "/newactivity",
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: "templates/newactivity.html",
+        controller: 'AddActivityCtrl'
       }
     }
   })

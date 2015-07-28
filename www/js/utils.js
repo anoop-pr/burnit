@@ -48,4 +48,25 @@ angular.module('ionic.utils', [])
       return category;     
     }
   }
+})
+
+.factory('activityLevel',  function(){
+  return {
+    text: function(point) {
+      var activity;
+
+      if(point <= 1.2) {
+        activity = 'Sedentary';
+      } else if(point > 1.2 && point <= 1.375) {
+        activity = "Lightly Active";
+      } else if(point > 1.375 && point <= 1.55) {
+        activity = "Moderately Active";
+      } else if(point > 1.55 && point <= 1.725) {
+        activity = "Very Active";
+      } else if(point > 1.725) {
+        activity = "Extremely Active";
+      }
+      return activity;     
+    }
+  }
 });

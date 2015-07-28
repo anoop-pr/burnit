@@ -29,7 +29,7 @@ angular.module('starter.controllers', [])
         alert(date);
     });*/
 
-    // $cordovaToast.showLongCenter('Here is a message');
+    // $cordovaToast.showLongBottom('Here is a message');
 
   }
 
@@ -55,18 +55,22 @@ angular.module('starter.controllers', [])
     });
     confirmPopup.then(function(res) {
       if(res) {
-        $scope.food.splice($index, 1)
+        var input = {date: $scope.food[$index].date};
+        $scope.food.splice($index, 1);
+        $food.remove(input).then(function() {
+          // console.log('removed from database');
+        });
       }
     });
   };
 })
 
-
-.controller('ActivityCtrl', function($activity, $scope, $rootScope, $ionicPopup) {
+.controller('ActivityCtrl', function($activity, $scope, $rootScope, $ionicPopup, $localstorage) {
   var updateList;
   (updateList = function() {
     $activity.get().then(function(data) {
       $scope.activities = data;  
+      $localstorage.setObject('activity', data);
     });  
   })();
 
@@ -81,22 +85,34 @@ angular.module('starter.controllers', [])
     });
     confirmPopup.then(function(res) {
       if(res) {
-        $scope.food.splice($index, 1)
+        var input = {date: $scope.activities[$index].date};
+        $scope.activities.splice($index, 1);
+        $activity.remove(input).then(function() {
+          // console.log('removed from database');
+        });
       }
     });
   };
 })
 
 
-.controller('FoodDetailsCtrl', function($stateParams, $rootScope, $timeout, $scope, $food, $ionicPopup, $localstorage, $ionicModal, $state){
+.controller('FoodDetailsCtrl', function($stateParams, $rootScope, $timeout, $scope, $food, $ionicPopup, $localstorage, $ionicModal, $state, $cordovaToast){
   var details,
       id  = $stateParams.id;
 
   (details = function(id) {
     $food.details(id).then(function(data) {
       $scope.data = data;
+      calculateTotal();
     });
   })(id);
+
+  function calculateTotal() {
+    $scope.total = 0;
+      for (var i = 0; i < $scope.data.length; i++) {
+        $scope.total += $scope.data[i].calorieConsumption
+      };
+  }
 
   $rootScope.$on('food:DetailsChanged', function() {
       details();
@@ -109,7 +125,19 @@ angular.module('starter.controllers', [])
     });
     confirmPopup.then(function(res) {
       if(res) {
+        // console.log($scope.data[$index]);
+        var input = {id: $scope.data[$index].id};
         $scope.data.splice($index, 1);
+        $food.remove(input).then(function() {});
+        if($scope.data.length <= 0) {
+          $scope.$emit('food:listChanged');
+          $state.transitionTo('app.food');
+        } else {
+          var food = $localstorage.getObject('food');
+          food[id].data = $scope.data;
+          $localstorage.setObject('food', food);
+          calculateTotal();
+        }
       }
     });
   }
@@ -135,10 +163,10 @@ angular.module('starter.controllers', [])
   $scope.update = function(data) {
     $food.update(data).then(function(data) {
       if(data.calorieConsumption == 0) {
-        $cordovaToast.showLongCenter('Something went wrong with the text please try again!');
+        $cordovaToast.showLongBottom('Something went wrong with the text please try again!');
       } else {
         $scope.$emit('food:listChanged');
-        $cordovaToast.showLongCenter('Food diary updated');
+        $cordovaToast.showLongBottom('Food diary updated');
       }
       $scope.modal.hide();
       $state.transitionTo('app.food');
@@ -147,38 +175,161 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('AddFoodCtrl', function($scope,  $mdDialog,  $state, $food, $cordovaToast) {
+.controller('ActivityDetailsCtrl', function($stateParams, $rootScope, $timeout, $scope, $activity, $ionicPopup, $localstorage, $ionicModal, $state, activityLevel){
+  var details,
+      id  = $stateParams.id;
+
+  (details = function(id) {
+    $activity.details(id).then(function(data) {
+      console.log(data);
+      $scope.data = data;
+      $scope.level = activityLevel.text(data.effort);
+    });
+  })(id);
+
+
+  $rootScope.$on('activity:DetailsChanged', function() {
+      details();
+  });
+
+  $scope.remove = function(item, $index) {
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Confirm',
+      template: 'Are you sure you want remove this item?'
+    });
+    confirmPopup.then(function(res) {
+      if(res) {
+        // console.log($scope.data[$index]);
+        var input = {id: $scope.data[$index].id};
+        $scope.data.splice($index, 1);
+        $food.remove(input).then(function() {});
+        if($scope.data.length <= 0) {
+          $scope.$emit('food:listChanged');
+          $state.transitionTo('app.food');
+        } else {
+          var food = $localstorage.getObject('food');
+          food[id].data = $scope.data;
+          $localstorage.setObject('food', food);
+          calculateTotal();
+        }
+      }
+    });
+  }
+
+  $ionicModal.fromTemplateUrl('templates/update-food.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.closeAdd = function() {
+    details(id);
+    $scope.modal.hide();
+  }
+
+  $scope.edit = function(item, $index) {
+    $scope.food = $scope.data[$index];
+    $scope.index = $index;
+    $scope.modal.show();
+  }
+
+  $scope.update = function(data) {
+    $food.update(data).then(function(data) {
+      if(data.calorieConsumption == 0) {
+        $cordovaToast.showLongBottom("We can't recognize the text, please try again");
+      } else {
+        $scope.$emit('food:listChanged');
+        $cordovaToast.showLongBottom('Food diary updated');
+      }
+      $scope.modal.hide();
+      $state.transitionTo('app.food');
+    });
+  }
+
+})
+
+.controller('AddFoodCtrl', function($scope,  $mdDialog,  $state, $food, $cordovaToast, $cordovaDatePicker, $filter) {
 
   var initData;
   (initData = function() {
     $scope.food = {};  
   })();
   $scope.saveFood = function(data) {
-
-    // var alert = $mdDialog.alert({
-    //   title: 'Attention',
-    //   content: 'This is an example of how easy dialogs can be!',
-    //   ok: 'Close'
-    // });
-    // $mdDialog.show( alert );
-
     $food.save(data).then(function(data) {
       if(data.calorieConsumption == 0) {
-        $cordovaToast.showLongCenter('Something went wrong with the text please try again!');
+        $cordovaToast.showLongBottom('Something went wrong with the text please try again!');
       } else {
         initData();
         $scope.$emit('food:listChanged');
-        $cordovaToast.showLongCenter('Food diary saved');
+        $cordovaToast.showLongBottom('Food diary saved');
       }
       $state.transitionTo('app.food');
     });
   }
 
+  $scope.datepicker = function() {
+     var options = {
+      date: new Date(),
+      mode: 'date'
+    };
+
+    $cordovaDatePicker.show(options).then(function(date){
+        $scope.food.date = $filter('date')(date, 'dd-MM-yyyy');
+    });
+  }
+
+
 
 })
 
-.controller('ProfileCtrl', function($scope, $ionicViewService, $cordovaToast, $state, $localstorage, $food) {
-  $ionicViewService.nextViewOptions({
+.controller('AddActivityCtrl', function($scope,  $mdDialog,  $state, $activity, $cordovaToast, $cordovaDatePicker, $filter, $localstorage) {
+
+  var initData;
+  (initData = function() {
+    $scope.activity = {};  
+  })();
+  $scope.saveActivity = function(data) {
+    $activity.save(data).then(function(data) {
+      if(data.effort == 0) {
+        $cordovaToast.showLongBottom("We can't recognize the text, please try again!");
+      } else {
+        initData();
+        $scope.$emit('activity:listChanged');
+        $cordovaToast.showLongBottom('Activity saved');
+      }
+      $state.transitionTo('app.activities');
+    });
+  }
+  var activities = $localstorage.getObject('activity');
+  $scope.$watch('activity.date', function(date) {
+    $.grep(activities, function(e){ 
+      var to = e.date.split("-");
+      var from = $scope.activity.date.split("-");
+      
+      var o = new Date(to[0], to[1] - 1, to[2]),
+          t = new Date(from[2], from[1] - 1, from[0]);
+
+       if(o.getTime() == t.getTime()) {
+        $scope.activity.text = e.activityText;
+       } 
+    });
+    
+  });
+
+  $scope.datepicker = function() {
+     var options = {
+      date: new Date(),
+      mode: 'date'
+    };
+    $cordovaDatePicker.show(options).then(function(date){
+        $scope.activity.date = $filter('date')(date, 'dd-MM-yyyy');
+    });
+  }
+})
+
+.controller('ProfileCtrl', function($scope, $ionicHistory, $cordovaToast, $state, $localstorage, $food) {
+  $ionicHistory.nextViewOptions({
     disableBack: true
   });
 
@@ -193,8 +344,8 @@ angular.module('starter.controllers', [])
     console.log(data);
     $food.profile(data).then(function(data) {
       $localstorage.setObject('data', data);
-      $cordovaToast.showLongCenter('Profile updated!');
-      $ionicViewService.nextViewOptions({
+      $cordovaToast.showLongBottom('Profile updated!');
+      $ionicHistory.nextViewOptions({
             disableBack: true
         });
       $state.transitionTo('app.home');
@@ -202,8 +353,8 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('HomeCtrl', function($scope, bmiCategory, $localstorage, $rootScope, $cordovaDevice, $ionicViewService, $state) {
-    $ionicViewService.nextViewOptions({
+.controller('HomeCtrl', function($scope, bmiCategory, $localstorage, $rootScope, $cordovaDevice, $ionicHistory, $state) {
+    $ionicHistory.nextViewOptions({
       disableBack: true
     });
 

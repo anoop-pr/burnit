@@ -1,6 +1,6 @@
-<ion-view view-title="Create Food Diary">
+<ion-view view-title="Create Activity">
   <ion-nav-buttons side="right">
-		<button class="button button-icon button-clear navbar-icons" ng-click="saveFood(food)">
+		<button class="button button-icon button-clear navbar-icons" ng-click="saveActivity(activity)">
 			<i class="ion-checkmark"></i>
 		</button>
 	</ion-nav-buttons>	
@@ -8,14 +8,14 @@
   	<div class="row">
   		<div class="col">
   		<md-content layout-padding>
-	  		<form autocomplete="off" id="foodDiary" name="foodDiary" novalidate>
+	  		<form autocomplete="off" id="activitys" name="activitys" novalidate>
 	  			<md-input-container flex>
 			      <label>Date</label>
-			      <input  ng-model="food.date" ng-click="datepicker()"> <!--  -->
+			      <input  ng-model="activity.date" ng-click="datepicker()"> <!--  -->
 			    </md-input-container>
 				<md-input-container >
-					<label>Food Diary</label>
-					<textarea ng-model="food.text" columns="1" md-maxlength="500"></textarea>
+					<label>Activity</label>
+					<textarea ng-model="activity.text" columns="1" md-maxlength="500"></textarea>
 				</md-input-container>
 			</form>
 			</md-content>

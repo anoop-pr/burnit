@@ -1,17 +1,20 @@
 <ion-view view-title="Activities">
   <ion-content>
 	<ion-list can-swipe="true">
-	  <ion-item ng-repeat="item in activities" href="#/app/food/{{item.id}}">
-	    <div class="circle">{{item.cal}}</div>
-		<h2>{{item.date | date:'longDate'}}</h2>
-		<p>Average calorie intake - <strong>{{item.cal}}</strong></p>
+	  <ion-item ng-repeat="item in activities" href="#/app/activity/{{$index}}">
+	  	<div class="circle">{{item.date | date:'dd'}}</div>
+		<h2 class="list-title">{{item.date | date:'longDate'}}</h2>
+		<!-- <p>Average calorie intake - <strong>{{item.calorieConsumption}}</strong></p> -->
 	    <ion-option-button class="button-assertive" ng-click="delete(item, $index);">
 	      <i class="icon ion-trash-b swipe-trash"></i>
 	    </ion-option-button>
 	  </ion-item>
 	</ion-list>
+	<p ng-if="activities.length<=0" style="text-align: center;">Nothing Found, Please Add!</p>
   </ion-content>
-  <md-button class="md-primary md-fab md-fab-bottom-right" href="#/app/newfood">
+  <a  href="#/app/newactivity">
+  <md-button class="md-primary md-fab md-fab-bottom-right">
     <i class="icon ion-plus"></i>
   </md-button>
+  </a>
 </ion-view>

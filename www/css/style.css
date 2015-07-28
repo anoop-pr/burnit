@@ -344,6 +344,7 @@ div.cal {
 .block { display: block; }
 
 .platform-android .bar .title {text-transform: uppercase; font-size: 18px;}
+
 md-tabs.md-default-theme md-tabs-ink-bar {
     background-color: #ffc107;
     height: 4px;
@@ -474,7 +475,7 @@ md-tabs.md-default-theme md-tabs-ink-bar {
 	color:#fff;
 	line-height:50px;
 	text-align:center;
-	background:#616161;
+	background:#03a9f4;
   float: left;
 	margin-right: 15px;
 }
@@ -525,3 +526,31 @@ select {
 .indego-bg {
   background-color: #3f51b5;
 }
+
+.total-head {
+  background-color: #2196f3;
+  color: white;
+  height:25px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.total-head p {
+  margin: 90px auto;
+}
+.total-value {
+  background-color: #2196f3;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  height:20px;
+  text-align: center;
+}
+.content-spacer {
+  background-color: #2196f3;
+  height:35px;
+}
+.bar.bar-positive {
+    border: none;
+    border-color: #2196f3 !important;
+    }
